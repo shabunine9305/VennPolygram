@@ -1,0 +1,22 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+canvas {
+  border-radius: 150px;
+}
+
+#subtitle {
+  min-width: 100%;
+  padding: 10px;
+  text-align: center;
+  color: rgb(142,142,142);
+  font-family: "Times padman";
+  font-style: italic;
+  font-size: 1.4em;
+}
