@@ -35,7 +35,7 @@ const WORD_LIST = ['Bills', 'Boundaries', 'Catharsis', 'Children',
                     // can you handle more than 7±2 core needs..?
 
 
-let flexContainer = document.getElementById("sketch-row");
+const cnvContainer = document.getElementById("sketch-row");
 
 // #########################################################
 
@@ -59,174 +59,147 @@ function draw() {}
 // x
 // x
 // x
-// x
-// x
-// x
-// x
-// x
-// x
-// x
-// x
-// x
-// x
-// x
-// x
-// x
-// x
-// x
-// x
-// x
-// x
-// x
-// x
-// x
-// x
-
-
 
 // #########################################################
 // SKETCH 1 : LEFT
 // #########################################################
 
 let sketches = {
-    p5s1: null,
-    p5s2: null
+    sk1: null,
+    sk2: null
 };
 
 for (let s in sketches) {
 
-    sketches[s] = new p5(sketch => {
-        // let cnv;
-        
-        // let DELAY = 200; // shhhh
-        // var DELAY = 1;
-      
-        let currentWords = [...WORD_LIST];
-      
-        // let graphics;
+    sketches[s] = new p5(sk => {
       
         // #########################################################
-      
-        // x
-      
-        // #########################################################
-        // SETUP SETUP SETUP SETUP SETUP SETUP SETUP SETUP SETUP
+        // SET_FADE SET_FADE SET_FADE SET_FADE SET_FADE SET_FADE
         // #########################################################
       
-        sketch.setFade = function () {
-          // sketch.fade.value = 0.0095 / DELAY;
+        sk.setFade = function () {
+
+          if (sk.fade === null || sk.fade === undefined) sk.fade = {};
+
+          // sk.fade.value = 0.0095 / DELAY;
       
           // move these later
-          sketch.fade.MIN = 0.0055;
-          sketch.fade.MAX = 0.06;
-          sketch.fade.lastPosition = null;
+          sk.fade.MIN = 0.0055;
+          sk.fade.MAX = 0.06;
+          sk.fade.lastPosition = null;
       
           let minPoint = 0.0055;
           let midPoint = 0.01;
           let maxPoint = 0.06;
           let cutoff = 150;
       
-        //   if (DELAY < cutoff) {
-        //     sketch.fade.value = sketch.map(1/DELAY, 1/200, 1/cutoff, maxPoint, midPoint, true);
-      
-        //   } else {
-        //     // sketch.fade.value = sketch.constrain(0.25 / DELAY, 0.006, 0.15);  
-        //     sketch.fade.value = sketch.map(1/DELAY, 1/cutoff, 1, midPoint, minPoint, true);  
-        //   }
-      
-          // sketch.fade.value = sketch.map(1/DELAY, 1/200, 1, minPoint, maxPoint, true);
-          sketch.fade.value = sketch.map(sketch.DELAY, 200, 1, minPoint, maxPoint, true);
-      
-          // console.log(sketch.fade.value);
+          sk.fade.value = sk.map(sk.DELAY, 200, 1, minPoint, maxPoint, true);
         }
+
+        sk.reset = function () {
+          sk.currentWords = [...WORD_LIST];
+          sk.graphics.pause(5);
+          console.log("Resetting! sk.framesSinceReset: " + sk.framesSinceReset);
+          sk.framesSinceReset = 0;
+        }
+
+        // #########################################################
+        // SETUP SETUP SETUP SETUP SETUP SETUP SETUP SETUP SETUP
+        // #########################################################
       
-        sketch.setup = function () {
+        sk.setup = function () {
+          // --------------------------------------------
+
+          sk.currentWords = [...WORD_LIST];
+
+          sk.DELAY = 200;
+
+          sk.setFade();
+
+          sk.framesSinceReset = 0;
+          sk.resetFrameCount = 0; // 0 is off, non-0 is ons
+          
+          // console.log(sk.DELAY);
+          // console.log("SETUP (sk.fade.value): " + sk.fade.value);
+
           // --------------------------------------------
       
-          sketch.cnv = sketch.createCanvas(DIM, DIM);
-          sketch.cnv.parent(flexContainer);
-          sketch.cnv.style("order", 1);
+          sk.cnv = sk.createCanvas(DIM, DIM);
+          sk.cnv.parent(cnvContainer);
+          sk.cnv.style("order", 1);
       
-          sketch.graphics = {
-            shapes: sketch.createGraphics(DIM, DIM),
-            text_: sketch.createGraphics(DIM, DIM),
-            title: sketch.createGraphics(DIM, DIM),
-            comp: sketch.createGraphics(DIM, DIM),
-            speed: sketch.createGraphics(DIM, DIM),
+          sk.graphics = {
+            shapes: sk.createGraphics(DIM, DIM),
+            text_: sk.createGraphics(DIM, DIM),
+            title: sk.createGraphics(DIM, DIM),
+            comp: sk.createGraphics(DIM, DIM),
+            speed: sk.createGraphics(DIM, DIM),
+            fade: true,
           };
           // --------------------------------------------
       
-          sketch.cnv.mousePressed(() => {
-            sketch.cnv.mouseOriginX = sketch.mouseX;
-            sketch.cnv.mouseOriginY = sketch.mouseY;
-            sketch.cnv.lastDelay = sketch.DELAY;
+          sk.cnv.mousePressed(() => {
+            sk.cnv.mouseOriginX = sk.mouseX;
+            sk.cnv.mouseOriginY = sk.mouseY;
+            sk.cnv.lastDelay = sk.DELAY;
           });
       
           // --------------------------------------------
       
-          sketch.colorMode(sketch.HSL);
-          sketch.graphics.shapes.colorMode(sketch.HSL);
-          sketch.graphics.text_.colorMode(sketch.HSL);
-          sketch.graphics.title.colorMode(sketch.HSL);
-          sketch.graphics.comp.colorMode(sketch.HSL);
-          sketch.graphics.speed.colorMode(sketch.HSL);
+          sk.colorMode(sk.HSL);
+          sk.graphics.shapes.colorMode(sk.HSL);
+          sk.graphics.text_.colorMode(sk.HSL);
+          sk.graphics.title.colorMode(sk.HSL);
+          sk.graphics.comp.colorMode(sk.HSL);
+          sk.graphics.speed.colorMode(sk.HSL);
       
-          sketch.graphics.shapes.ellipseMode(sketch.CENTER);
-          sketch.graphics.shapes.stroke("black");
-          sketch.graphics.shapes.noFill();
-          sketch.graphics.shapes.strokeWeight(2);
+          sk.graphics.shapes.ellipseMode(sk.CENTER);
+          sk.graphics.shapes.stroke("black");
+          sk.graphics.shapes.noFill();
+          sk.graphics.shapes.strokeWeight(2);
       
-          sketch.graphics.text_.textAlign(sketch.CENTER, sketch.CENTER);
-          sketch.graphics.text_.textFont("Times New Roman");
-          sketch.graphics.text_.textSize(20);
-          sketch.graphics.text_.strokeWeight(0.5);
-          sketch.graphics.text_.stroke("black");
-          // sketch.graphics.text_.textStyle(BOLD);
+          sk.graphics.text_.textAlign(sk.CENTER, sk.CENTER);
+          sk.graphics.text_.textFont("Times New Roman");
+          sk.graphics.text_.textSize(20);
+          sk.graphics.text_.strokeWeight(0.5);
+          sk.graphics.text_.stroke("black");
+          // sk.graphics.text_.textStyle(BOLD);
       
-          sketch.graphics.title.textAlign(sketch.CENTER, sketch.TOP);
-          sketch.graphics.title.textSize(30);
-          sketch.graphics.title.stroke("black");
-          sketch.graphics.title.strokeWeight(0.2);
-          sketch.graphics.title.textFont("Times New Roman");
+          sk.graphics.title.textAlign(sk.CENTER, sk.TOP);
+          sk.graphics.title.textSize(30);
+          sk.graphics.title.stroke("black");
+          sk.graphics.title.strokeWeight(0.2);
+          sk.graphics.title.textFont("Times New Roman");
       
-          sketch.graphics.speed.stroke(360, 0.6);
-          sketch.graphics.speed.fill(0, 0.3);
-          sketch.graphics.speed.lastPosition = null;
-      
-          // --------------------------------------------
-      
-          sketch.graphics.title.text("Priorities", DIM/2, DIM/15);
-      
-          sketch.cnv.background(BG_COLOR);
-      
-          sketch.graphics.comp.image(sketch.graphics.title, 0, 0);
+          sk.graphics.speed.stroke(360, 0.6);
+          sk.graphics.speed.fill(0, 0.3);
+          sk.graphics.speed.lastPosition = null;
       
           // --------------------------------------------
       
-          sketch.frameRate(DEF_FPS);
+          sk.graphics.title.text("Priorities", DIM/2, DIM/15);
+      
+          sk.cnv.background(BG_COLOR);
+      
+          sk.graphics.comp.image(sk.graphics.title, 0, 0);
       
           // --------------------------------------------
       
-          sketch.graphics.fade = true;
-      
-          sketch.DELAY = 200;
-
-          sketch.fade = {};
-          sketch.setFade();
+          sk.frameRate(DEF_FPS);
       
           // --------------------------------------------
       
-          sketch.graphics.pauseTimer = 0;
+          sk.graphics.pauseTimer = 0;
       
-          sketch.graphics.pause = function (n) {
-            sketch.graphics.shapes.clear();
-            sketch.graphics.text_.clear();
-            sketch.graphics.pauseTimer = n * sketch.frameRate();    
+          sk.graphics.pause = function (n) {
+            sk.graphics.shapes.clear();
+            sk.graphics.text_.clear();
+            sk.graphics.pauseTimer = n * sk.frameRate();    
           }
       
           // --------------------------------------------
       
-          sketch.graphics.drawEllipse = function (n) {
+          sk.graphics.drawEllipse = function (n) {
       
             if (n === undefined) n = 1;
       
@@ -237,23 +210,23 @@ for (let s in sketches) {
       
               for (let i = 0; i < n; i++) {
       
-                let padding = DIM/2 - ELLIPSE_SIZE/2 - sketch.random(DIM/10);
+                let padding = DIM/2 - ELLIPSE_SIZE/2 - sk.random(DIM/10);
       
                 let textPadding = ELLIPSE_SIZE/2 * (1/3);
       
-                let x = sketch.constrain(sketch.random(-DIM/2, DIM/2), -padding, padding);
-                let y = sketch.constrain(sketch.random(-DIM/2, DIM/2), -padding, padding);
+                let x = sk.constrain(sk.random(-DIM/2, DIM/2), -padding, padding);
+                let y = sk.constrain(sk.random(-DIM/2, DIM/2), -padding, padding);
       
                 // console.log(x + " " + y);
       
                 this.shapes.ellipse(x, y, ELLIPSE_SIZE, ELLIPSE_SIZE);
       
-                let word = currentWords.splice(Math.floor(sketch.random(currentWords.length)), 1);
+                let word = sk.currentWords.splice(Math.floor(sk.random(sk.currentWords.length)), 1);
       
-                if (!currentWords.length) currentWords = [...WORD_LIST];
+                if (!sk.currentWords.length) sk.currentWords = [...WORD_LIST];
       
-                this.text_.text(word, x + sketch.random(-textPadding, textPadding),
-                                      y + sketch.random(-textPadding, textPadding));
+                this.text_.text(word, x + sk.random(-textPadding, textPadding),
+                                      y + sk.random(-textPadding, textPadding));
               }
             this.text_.pop();
             this.shapes.pop();
@@ -263,498 +236,158 @@ for (let s in sketches) {
         }
       
         // #########################################################
-      
-        // x
-      
-        // #########################################################
         // DRAW DRAW DRAW DRAW DRAW DRAW DRAW DRAW DRAW DRAW DRAW
         // #########################################################
       
-        sketch.draw = function () {
-      
-          // --------------------------------------------
-          sketch.graphics.speed.erase(0.45);
-          sketch.graphics.speed.square(0, 0, DIM);
-          sketch.graphics.speed.noErase();
+        sk.draw = function () {
           
-          if (sketch.mouseIsPressed && sketch.cnv.mouseOriginX !== null) {
+          // --------------------------------------------
+          sk.graphics.speed.erase(0.45);
+          sk.graphics.speed.square(0, 0, DIM);
+          sk.graphics.speed.noErase();
+          
+          // if (sk.mouseIsPressed && sk.cnv.mouseOriginX !== null) {
       
-            let mouseDiff = { x: sketch.mouseX - sketch.cnv.mouseOriginX,
-                              y: sketch.mouseY - sketch.cnv.mouseOriginY };
+          //   let mouseDiff = { x: sk.mouseX - sk.cnv.mouseOriginX,
+          //                     y: sk.mouseY - sk.cnv.mouseOriginY };
       
       
-            console.log(mouseDiff);
+          //   // console.log(mouseDiff);
       
-            sketch.DELAY = sketch.constrain((sketch.cnv.lastDelay || 0) +
-                                Math.floor(sketch.map(mouseDiff.x, -DIM/2, DIM/2, 200, -200, true)),
-                              1, 200);
-            sketch.setFade();
-            // console.log(sketch.DELAY);
+          //   sk.DELAY = sk.constrain((sk.cnv.lastDelay || 0) +
+          //                       Math.floor(sk.map(mouseDiff.x, -DIM/2, DIM/2, 200, -200, true)),
+          //                     1, 200);
+          //   sk.setFade();
+          //   // console.log(sk.DELAY);
       
-            sketch.fade.value = sketch.constrain((sketch.fade.lastPosition || 0) +
-                                     Math.floor(sketch.map(mouseDiff.y, -DIM/2, DIM/2, -sketch.fade.MAX, sketch.fade.MAX, true)), 
-                                   sketch.fade.MIN, sketch.fade.MAX); // hmmmmm TODO TODO TODO
+          //   sk.fade.value = (sk.fade.lastPosition || 0) +
+          //                   Math.floor(sk.map(mouseDiff.y, -DIM/2, DIM/2, -sk.fade.MAX, sk.fade.MAX, true)); // hmmmmm TODO TODO TODO
       
-            console.log(sketch.fade.value);
+          //   sk.fade.value = sk.constrain(sk.fade.value,
+          //                                sk.fade.MIN, sk.fade.MAX)
+
+          //   console.log("DRAW+mouseIsPressed (sk.fade.value): " + sk.fade.value);
+
+          //   let indicatorSize = 30;
+          //   let indicatorPosition = {
+          //     x: sk.map(sk.DELAY, 200, 1, indicatorSize/2, DIM-(indicatorSize/2)),
+          //     y: sk.map(sk.fade.value, sk.fade.MIN, sk.fade.MAX, indicatorSize/2, DIM-(indicatorSize/2))};
       
-            let indicatorSize = 30;
-            let indicatorPosition = {
-              x: sketch.map(sketch.DELAY, 200, 1, indicatorSize/2, DIM-(indicatorSize/2)),
-              y: sketch.map(sketch.fade.value, sketch.fade.MIN, sketch.fade.MAX, indicatorSize/2, DIM-(indicatorSize/2))};
+          //   if (sk.graphics.speed.lastPosition !== null)
+          //     indicatorPosition.x = sk.constrain((indicatorPosition.x +
+          //                                       sk.graphics.speed.lastPosition) / 2,
+          //                                     0, DIM);
       
-            if (sketch.graphics.speed.lastPosition !== null)
-              indicatorPosition.x = sketch.constrain((indicatorPosition.x +
-                                                sketch.graphics.speed.lastPosition) / 2,
-                                              0, DIM);
+          //   sk.graphics.speed.lastPosition = indicatorPosition.x;
       
-            sketch.graphics.speed.lastPosition = indicatorPosition.x;
+          //   if (sk.fade.lastPosition !== null)
+          //     indicatorPosition.y = sk.constrain((indicatorPosition.y + sk.fade.lastPosition) / 2, 0, DIM);
       
-            if (sketch.fade.lastPosition !== null)
-              indicatorPosition.y = sketch.constrain((indicatorPosition.y + sketch.fade.lastPosition) / 2, 0, DIM);
+          //   sk.fade.lastPosition = indicatorPosition.y;
       
-            sketch.fade.lastPosition = indicatorPosition.y;
+          //   // sk.graphics.speed.circle(indicatorPosition.x, indicatorPosition.y, indicatorSize);
+          //   sk.graphics.speed.circle(indicatorPosition.x, DIM/2 - 20, indicatorSize);
+          //   // sk.graphics.speed.circle(indicatorPosition.x, sk.mouseY, indicatorSize);
+          // }
       
-            // sketch.graphics.speed.circle(indicatorPosition.x, indicatorPosition.y, indicatorSize);
-            sketch.graphics.speed.circle(indicatorPosition.x, DIM/2 - 20, indicatorSize);
-            // sketch.graphics.speed.circle(indicatorPosition.x, sketch.mouseY, indicatorSize);
+          // --------------------------------------------
+      
+          sk.clear();
+      
+          sk.graphics.shapes.clear();
+          sk.graphics.text_.clear();
+      
+          // --------------------------------------------
+      
+          sk.background(BG_COLOR);
+      
+          if (sk.graphics.fade) {
+            // sk.graphics.comp.background(BG_COLOR, sk.fade.value);
+      
+            sk.graphics.comp.erase(sk.fade.value);
+              sk.graphics.comp.square(0, 0, DIM);
+            sk.graphics.comp.noErase();
           }
       
           // --------------------------------------------
       
-          sketch.clear();
+          if (sk.graphics.pauseTimer !== 0) {
+            sk.graphics.pauseTimer = Math.max(0, sk.graphics.pauseTimer-1);
       
-          sketch.graphics.shapes.clear();
-          sketch.graphics.text_.clear();
-      
-          // --------------------------------------------
-      
-          sketch.background(BG_COLOR);
-      
-          if (sketch.graphics.fade) {
-            // sketch.graphics.comp.background(BG_COLOR, sketch.fade.value);
-      
-            sketch.graphics.comp.erase(sketch.fade.value);
-              sketch.graphics.comp.square(0, 0, DIM);
-            sketch.graphics.comp.noErase();
-          }
-      
-          // --------------------------------------------
-      
-          if (sketch.graphics.pauseTimer !== 0) {
-            sketch.graphics.pauseTimer = Math.max(0, sketch.graphics.pauseTimer-1);
-      
-            if (sketch.graphics.pauseTimer < sketch.frameRate()*3.5)
-              sketch.graphics.comp.background(BG_COLOR, 0.4);
+            if (sk.graphics.pauseTimer < sk.frameRate()*3.5)
+              sk.graphics.comp.background(BG_COLOR, 0.4);
             else
-              sketch.graphics.comp.background(BG_COLOR, 0.1);
+              sk.graphics.comp.background(BG_COLOR, 0.1);
       
-            sketch.graphics.comp.image(sketch.graphics.title, 0, 0);
+            sk.graphics.comp.image(sk.graphics.title, 0, 0);
       
-            // console.log(sketch.graphics.pauseTimer);
+            // console.log(sk.graphics.pauseTimer);
+          
+          } else {
+            
+            if (sk.resetFrameCount &&
+                sk.framesSinceReset++ > sk.resetFrameCount)
+              sk.reset();
+
+            else if (sk.frameCount % sk.DELAY === 0) {
+              // console.log(sk.framesSinceReset);
+              
+              sk.graphics.drawEllipse();
+            }
           }
       
-          else if (sketch.frameCount % sketch.DELAY === 0) {
-            sketch.graphics.drawEllipse();
-          }
       
           // --------------------------------------------
       
-          sketch.graphics.comp.image(sketch.graphics.shapes, 0, 0);
-          sketch.graphics.comp.image(sketch.graphics.text_, 0, 0);
-          // sketch.graphics.comp.image(sketch.graphics.title, 0, 0);
+          sk.graphics.comp.image(sk.graphics.shapes, 0, 0);
+          sk.graphics.comp.image(sk.graphics.text_, 0, 0);
+          // sk.graphics.comp.image(sk.graphics.title, 0, 0);
       
-          sketch.image(sketch.graphics.comp, 0, 0);
+          sk.image(sk.graphics.comp, 0, 0);
       
-          // image(sketch.graphics.title, 0, 0);
+          // image(sk.graphics.title, 0, 0);
       
-          sketch.image(sketch.graphics.speed, 0, 0);
+          sk.image(sk.graphics.speed, 0, 0);
       
           // --------------------------------------------
         }
       
         // #########################################################
       
-        sketch.keyPressed = (event) => {
+        sk.keyPressed = (event) => {
       
           switch (event.code) {
             case 'KeyR':
-              currentWords = [...WORD_LIST];
-              sketch.graphics.pause(5);
+              sk.reset();
               break;
       
             case 'KeyP':
-              let newFPS = sketch.frameRate() ? 0 : DEF_FPS;
-              sketch.frameRate(newFPS);
+              let newFPS = sk.frameRate() ? 0 : DEF_FPS;
+              sk.frameRate(newFPS);
               console.log(newFPS ? "Unpaused" : "Paused"); // I'm confused
               break;
       
             case 'KeyF':
-              sketch.graphics.fade = !sketch.graphics.fade;
-              console.log("Fade : " + sketch.graphics.fade);
+              sk.graphics.fade = !sk.graphics.fade;
+              console.log("Fade : " + sk.graphics.fade);
               break;
           }
       
         }
       
-        sketch.mouseReleased = () => {
-          sketch.cnv.mouseOriginX = null;
-          sketch.cnv.mouseOriginY = null;
-          sketch.graphics.speed.lastPosition = null;
+        sk.mouseReleased = () => {
+          sk.cnv.mouseOriginX = null;
+          sk.cnv.mouseOriginY = null;
+          sk.graphics.speed.lastPosition = null;
         }
       
         // #########################################################
         });
 }
-/*
-let p5s1 = new p5(sketch => {
-  let cnv;
-  
-  let DELAY = 200; // shhhh
-  sketch.fade = {}; 
-  // var DELAY = 1;
 
-  let currentWords = [...WORD_LIST];
+// #########################################################
+// #########################################################
 
-  let graphics;
-
-  // #########################################################
-
-  // x
-
-  // #########################################################
-  // SETUP SETUP SETUP SETUP SETUP SETUP SETUP SETUP SETUP
-  // #########################################################
-
-  setFade = function () {
-    // sketch.fade.value = 0.0095 / DELAY;
-
-    // move these later
-    sketch.fade.MIN = 0.0055;
-    sketch.fade.MAX = 0.06;
-    sketch.fade.lastPosition = null;
-
-    let minPoint = 0.0055;
-    let midPoint = 0.01;
-    let maxPoint = 0.06;
-    let cutoff = 150;
-
-  //   if (DELAY < cutoff) {
-  //     sketch.fade.value = sketch.map(1/DELAY, 1/200, 1/cutoff, maxPoint, midPoint, true);
-
-  //   } else {
-  //     // sketch.fade.value = sketch.constrain(0.25 / DELAY, 0.006, 0.15);  
-  //     sketch.fade.value = sketch.map(1/DELAY, 1/cutoff, 1, midPoint, minPoint, true);  
-  //   }
-
-    // sketch.fade.value = sketch.map(1/DELAY, 1/200, 1, minPoint, maxPoint, true);
-    sketch.fade.value = sketch.map(DELAY, 200, 1, minPoint, maxPoint, true);
-
-    // console.log(sketch.fade.value);
-  }
-
-  sketch.setup = function () {
-    // --------------------------------------------
-
-    cnv = sketch.createCanvas(DIM, DIM);
-    cnv.parent(flexContainer);
-    cnv.style("order", 1);
-
-    graphics = {
-      shapes: sketch.createGraphics(DIM, DIM),
-      text_: sketch.createGraphics(DIM, DIM),
-      title: sketch.createGraphics(DIM, DIM),
-      comp: sketch.createGraphics(DIM, DIM),
-      speed: sketch.createGraphics(DIM, DIM),
-    };
-    // --------------------------------------------
-
-    cnv.mousePressed(() => {
-      cnv.mouseOriginX = sketch.mouseX;
-      cnv.mouseOriginY = sketch.mouseY;
-      cnv.lastDelay = DELAY;
-    });
-
-    // --------------------------------------------
-
-    sketch.colorMode(sketch.HSL);
-    graphics.shapes.colorMode(sketch.HSL);
-    graphics.text_.colorMode(sketch.HSL);
-    graphics.title.colorMode(sketch.HSL);
-    graphics.comp.colorMode(sketch.HSL);
-    graphics.speed.colorMode(sketch.HSL);
-
-    graphics.shapes.ellipseMode(sketch.CENTER);
-    graphics.shapes.stroke("black");
-    graphics.shapes.noFill();
-    graphics.shapes.strokeWeight(2);
-
-    graphics.text_.textAlign(sketch.CENTER, sketch.CENTER);
-    graphics.text_.textFont("Times New Roman");
-    graphics.text_.textSize(20);
-    graphics.text_.strokeWeight(0.5);
-    graphics.text_.stroke("black");
-    // graphics.text_.textStyle(BOLD);
-
-    graphics.title.textAlign(sketch.CENTER, sketch.TOP);
-    graphics.title.textSize(30);
-    graphics.title.stroke("black");
-    graphics.title.strokeWeight(0.2);
-    graphics.title.textFont("Times New Roman");
-
-    graphics.speed.stroke(360, 0.6);
-    graphics.speed.fill(0, 0.3);
-    graphics.speed.lastPosition = null;
-
-    // --------------------------------------------
-
-    graphics.title.text("Priorities", DIM/2, DIM/15);
-
-    cnv.background(BG_COLOR);
-
-    graphics.comp.image(graphics.title, 0, 0);
-
-    // --------------------------------------------
-
-    sketch.frameRate(DEF_FPS);
-
-    // --------------------------------------------
-
-    graphics.fade = true;
-
-    setFade();
-
-    // --------------------------------------------
-
-    graphics.pauseTimer = 0;
-
-    graphics.pause = function (n) {
-      graphics.shapes.clear();
-      graphics.text_.clear();
-      graphics.pauseTimer = n * sketch.frameRate();    
-    }
-
-    // --------------------------------------------
-
-    graphics.drawEllipse = function (n) {
-
-      if (n === undefined) n = 1;
-
-      this.shapes.push();
-      this.text_.push();
-        this.shapes.translate(DIM/2, DIM/2);
-        this.text_.translate(DIM/2, DIM/2);
-
-        for (let i = 0; i < n; i++) {
-
-          let padding = DIM/2 - ELLIPSE_SIZE/2 - sketch.random(DIM/10);
-
-          let textPadding = ELLIPSE_SIZE/2 * (1/3);
-
-          let x = sketch.constrain(sketch.random(-DIM/2, DIM/2), -padding, padding);
-          let y = sketch.constrain(sketch.random(-DIM/2, DIM/2), -padding, padding);
-
-          // console.log(x + " " + y);
-
-          this.shapes.ellipse(x, y, ELLIPSE_SIZE, ELLIPSE_SIZE);
-
-          let word = currentWords.splice(Math.floor(sketch.random(currentWords.length)), 1);
-
-          if (!currentWords.length) currentWords = [...WORD_LIST];
-
-          this.text_.text(word, x + sketch.random(-textPadding, textPadding),
-                                y + sketch.random(-textPadding, textPadding));
-        }
-      this.text_.pop();
-      this.shapes.pop();
-    };
-
-    // --------------------------------------------
-  }
-
-  // #########################################################
-
-  // x
-
-  // #########################################################
-  // DRAW DRAW DRAW DRAW DRAW DRAW DRAW DRAW DRAW DRAW DRAW
-  // #########################################################
-
-  sketch.draw = function () {
-
-    // --------------------------------------------
-    graphics.speed.erase(0.45);
-    graphics.speed.square(0, 0, DIM);
-    graphics.speed.noErase();
-    
-    if (sketch.mouseIsPressed && cnv.mouseOriginX !== null) {
-
-      let mouseDiff = { x: sketch.mouseX - cnv.mouseOriginX,
-                        y: sketch.mouseY - cnv.mouseOriginY };
-
-
-      console.log(mouseDiff);
-
-      DELAY = sketch.constrain((cnv.lastDelay || 0) +
-                          Math.floor(sketch.map(mouseDiff.x, -DIM/2, DIM/2, 200, -200, true)),
-                        1, 200);
-      setFade();
-      // console.log(DELAY);
-
-      sketch.fade.value = sketch.constrain((sketch.fade.lastPosition || 0) +
-                               Math.floor(sketch.map(mouseDiff.y, -DIM/2, DIM/2, -sketch.fade.MAX, sketch.fade.MAX, true)), 
-                             sketch.fade.MIN, sketch.fade.MAX); // hmmmmm TODO TODO TODO
-
-      console.log(sketch.fade.value);
-
-      let indicatorSize = 30;
-      let indicatorPosition = {
-        x: sketch.map(DELAY, 200, 1, indicatorSize/2, DIM-(indicatorSize/2)),
-        y: sketch.map(sketch.fade.value, sketch.fade.MIN, sketch.fade.MAX, indicatorSize/2, DIM-(indicatorSize/2))};
-
-      if (graphics.speed.lastPosition !== null)
-        indicatorPosition.x = sketch.constrain((indicatorPosition.x +
-                                          graphics.speed.lastPosition) / 2,
-                                        0, DIM);
-
-      graphics.speed.lastPosition = indicatorPosition.x;
-
-      if (sketch.fade.lastPosition !== null)
-        indicatorPosition.y = sketch.constrain((indicatorPosition.y + sketch.fade.lastPosition) / 2, 0, DIM);
-
-      sketch.fade.lastPosition = indicatorPosition.y;
-
-      // graphics.speed.circle(indicatorPosition.x, indicatorPosition.y, indicatorSize);
-      graphics.speed.circle(indicatorPosition.x, DIM/2 - 20, indicatorSize);
-      // graphics.speed.circle(indicatorPosition.x, sketch.mouseY, indicatorSize);
-    }
-
-    // --------------------------------------------
-
-    sketch.clear();
-
-    graphics.shapes.clear();
-    graphics.text_.clear();
-
-    // --------------------------------------------
-
-    sketch.background(BG_COLOR);
-
-    if (graphics.fade) {
-      // graphics.comp.background(BG_COLOR, sketch.fade.value);
-
-      graphics.comp.erase(sketch.fade.value);
-        graphics.comp.square(0, 0, DIM);
-      graphics.comp.noErase();
-    }
-
-    // --------------------------------------------
-
-    if (graphics.pauseTimer !== 0) {
-      graphics.pauseTimer = Math.max(0, graphics.pauseTimer-1);
-
-      if (graphics.pauseTimer < sketch.frameRate()*3.5)
-        graphics.comp.background(BG_COLOR, 0.4);
-      else
-        graphics.comp.background(BG_COLOR, 0.1);
-
-      graphics.comp.image(graphics.title, 0, 0);
-
-      // console.log(graphics.pauseTimer);
-    }
-
-    else if (sketch.frameCount % DELAY === 0) {
-      graphics.drawEllipse();
-    }
-
-    // --------------------------------------------
-
-    graphics.comp.image(graphics.shapes, 0, 0);
-    graphics.comp.image(graphics.text_, 0, 0);
-    // graphics.comp.image(graphics.title, 0, 0);
-
-    sketch.image(graphics.comp, 0, 0);
-
-    // image(graphics.title, 0, 0);
-
-    sketch.image(graphics.speed, 0, 0);
-
-    // --------------------------------------------
-  }
-
-  // #########################################################
-
-  sketch.keyPressed = (event) => {
-
-    switch (event.code) {
-      case 'KeyR':
-        currentWords = [...WORD_LIST];
-        graphics.pause(5);
-        break;
-
-      case 'KeyP':
-        let newFPS = sketch.frameRate() ? 0 : DEF_FPS;
-        sketch.frameRate(newFPS);
-        console.log(newFPS ? "Unpaused" : "Paused"); // I'm confused
-        break;
-
-      case 'KeyF':
-        graphics.fade = !graphics.fade;
-        console.log("Fade : " + graphics.fade);
-        break;
-    }
-
-  }
-
-  sketch.mouseReleased = () => {
-    cnv.mouseOriginX = null;
-    cnv.mouseOriginY = null;
-    graphics.speed.lastPosition = null;
-  }
-
-  // #########################################################
-  });
-*/
-// x
-// x
-// x
-// x
-// x
-// x
-// x
-// x
-// x
-// x
-// x
-// x
-// x
-// x
-// x
-// x
-// x
-// x
-// x
-// x
-// x
-// x
-// x
-// x
-// x
-// x
-// x
-// x
-// x
-// x
-// x
-// x
-// x
-// x
-// x
-// x
-// x
-// x
-// x
-// x
-// x
 // x
 // x
 // x
@@ -788,17 +421,43 @@ let p5s1 = new p5(sketch => {
 // x
 
 // #########################################################
-// SKETCH 2 : RIGHT
+// SKETCH MODIFICATION - SKETCH MODIFICATION - SKETCH MOD
 // #########################################################
 
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
-/* CHANGES TO SKETCH 2
+async function postSetup() {
+  // --------------------------------
 
-    cnv.style("order", 2);
+  await sleep(2000);
+  console.log("Activating postSetup()");
 
+  /*
+  // let minPoint = 0.0055;
+  // let midPoint = 0.01;
+  // let maxPoint = 0.06;
+  */
 
-*/
+  // --------------------------------
 
+  let sk1ResetMinutes = 5;
+
+  sketches.sk1.DELAY = 100;
+  sketches.sk1.fade.value = 0.0085;
+  sketches.sk1.resetFrameCount = DEF_FPS * 60 * sk1ResetMinutes;
+
+  // --------------------------------
+
+  sketches.sk2.DELAY = 205;
+  sketches.sk2.fade.value = 0.006;
+
+  // --------------------------------
+
+}
+
+postSetup();
 
 // #########################################################
 // #########################################################
