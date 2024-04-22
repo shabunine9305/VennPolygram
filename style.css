@@ -5,6 +5,7 @@ html, body {
   align-items: center;
   justify-content: center;
   background-color: rgb(26, 26, 26);
+  overflow: hidden;
 }
 
 canvas {
