@@ -103,6 +103,10 @@ for (let s in sketches) {
           sk.framesSinceReset = 0;
         }
 
+        sk.logPercentToReset = function () {
+          console.log(sk.round(sk.framesSinceReset/sk.resetFrameCount*100, 3) + "%")
+        }
+
         // #########################################################
         // SETUP SETUP SETUP SETUP SETUP SETUP SETUP SETUP SETUP
         // #########################################################
@@ -450,7 +454,7 @@ async function postSetup() {
 
   // --------------------------------
 
-  let sk2ResetMinutes = 60 * 4;
+  let sk2ResetMinutes = 60 * 2;
 
   sketches.sk2.DELAY = 205;
   sketches.sk2.fade.value = 0.006;
