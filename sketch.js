@@ -103,6 +103,10 @@ for (let s in sketches) {
           sk.framesSinceReset = 0;
         }
 
+        sk.logPercentToReset = function () {
+          console.log(sk.round(sk.framesSinceReset/sk.resetFrameCount*100, 3) + "%")
+        }
+
         // #########################################################
         // SETUP SETUP SETUP SETUP SETUP SETUP SETUP SETUP SETUP
         // #########################################################
