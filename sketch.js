@@ -450,7 +450,7 @@ async function postSetup() {
 
   // --------------------------------
 
-  let sk2ResetMinutes = 60 * 4;
+  let sk2ResetMinutes = 60 * 2;
 
   sketches.sk2.DELAY = 205;
   sketches.sk2.fade.value = 0.006;
