@@ -6,15 +6,13 @@
 // THIS IS A COPY FOR DISPLAYING AT THE STUDENT ART SHOW 
 
 /*
-TODO:
-- two canvases next to each other
-  - french text in between them?
-  
-- fix my terrible const vars and janky implementation of delay changing
-- fix resetting when different delay
-- make fade more consistent with different delays
-- fix priority bold
-- oh no I just discovered erase
+// TODO - two canvases next to each other
+// TODO - french text in between them?
+TODO - fix my terrible const vars and janky implementation of delay changing
+TODO - fix resetting when different delay
+TODO - make fade more consistent with different delays
+TODO - fix priority bold
+OOOO - oh no I just discovered erase
 */
 
 // #########################################################
@@ -64,7 +62,7 @@ function draw() {}
 // SKETCH 1 : LEFT
 // #########################################################
 
-let sketches = {
+const sketches = {
     sk1: null,
     sk2: null
 };
